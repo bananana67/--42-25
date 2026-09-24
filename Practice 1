@@ -1,0 +1,20 @@
+Задача 1
+Ответ: grep '^[a-zA-Z]' /etc/passwd | cut -d: -f1 | sort
+Задача 2
+Ответ: awk '!/^#/ && NF>1 {print $2, $1}' /etc/protocols | sort -nr | head -n 5
+Задача 3
+Ответ: 
+Код программы banner.bash:
+```
+LENGTH=${#TEXT}
+
+BORDER="+"
+for ((i=0; i<LENGTH+2; i++)); do
+    BORDER+="-"
+done
+BORDER+="+"
+
+echo "$BORDER"
+echo "| $TEXT |"
+echo "$BORDER"
+```
