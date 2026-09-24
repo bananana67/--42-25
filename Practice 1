@@ -18,3 +18,11 @@ echo "$BORDER"
 echo "| $TEXT |"
 echo "$BORDER"
 ```
+Ввод:
+bash banner "Hello from RTU MIREA!"
+Вывод:
+```
++-----------------------+
+| Hello from RTU MIREA! |
++-----------------------+
+```
