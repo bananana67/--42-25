@@ -26,3 +26,172 @@ bash banner "Hello from RTU MIREA!"
 | Hello from RTU MIREA! |
 +-----------------------+
 ```
+Задача 4
+Написать программу для вывода всех идентификаторов (по правилам C/C++ или Java) в файле (без повторений).
+
+Пример для hello.c:
+
+h hello include int main n printf return stdio void world
+Ответ:
+
+grep -oE '[a-zA-Z_][a-zA-Z0-9_]*' hello.c | sort -u | xargs        
+cout endl Goyda include int iostream main namespase return0 std using
+Задача 5
+Написать программу для регистрации пользовательской команды (правильные права доступа и копирование в /usr/local/bin).
+
+Например, пусть программа называется reg:
+
+./reg banner
+Код файла goyda:
+
+#!/bin/bash
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <file>" >&2
+    exit 1
+fi
+
+if [ ! -f "$1" ]; then
+    echo "Файл $1 не найден" >&2
+    exit 1
+fi
+
+sudo install -m 755 "$1" /usr/local/bin/
+Ответ:
+
+labex:project/ $ nano goyda
+abex:project/ $ chmod +x gouda
+labex:project/ $ ./goyda banner
+
+labex:project/ $ ls -l /usr/local/bin/banner
+Вывод:
+
+-rwxr-xr-x 1 root root 0 Sep 30 23:02 /usr/local/bin/banner
+В результате для banner задаются правильные права доступа и сам banner копируется в /usr/local/bin.
+
+Задача 6
+Написать программу для проверки наличия комментария в первой строке файлов с расширением c, js и py. Код файла six, созданного в консоли:
+
+#!/bin/bash
+dir="${1:-.}"
+
+find "$dir" -type f \( -name '*.c' -o -name '*.js' -o -name '*.py' \) | while IFS= read -r f; do
+    first=$(head -n 1 "$f")
+    case "$f" in
+        *.c|*.js) pattern='^[[:space:]]*(//|/\*)' ;;
+        *.py)     pattern='^[[:space:]]*#' ;;
+    esac
+    if [[ $first =~ $pattern ]]; then
+        echo "$f: комментарий есть"
+    else
+        echo "$f: комментария нет"
+    fi
+done
+Проверка кода:
+
+labex:project/ $ nano six
+labex:project/ $ chmod +x six
+labex:project/ $ mkdir t6 && cd t6
+labex:t6/ $ echo "// comment" > a.c
+labex:t6/ $ echo "int x;" > b.c
+labex:t6/ $ echo "# comment" > c.py
+labex:t6/ $ cd ..
+labex:project/ $ ./six t6
+Вывод:
+
+t6/a.c: комментарий есть
+t6/b.c: комментария нет
+t6/c.py: комментарий есть
+Задача 7
+Написать программу для нахождения файлов-дубликатов (имеющих 1 или более копий содержимого) по заданному пути (и подкаталогам). Код файла seven, созданного в консоли:
+
+#!/bin/bash
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <dir>" >&2
+    exit 1
+fi
+
+find "$1" -type f -exec md5sum {} + | sort | uniq -w32 --all-repeated=separate
+Создание и проверка файла seven через ShellCheck
+
+Проверка кода:
+
+labex:project/ $ nano seven
+labex:project/ $ chmod +x seven
+labex:project/ $ mkdir t7
+labex:project/ $ echo hi > t7/a.txt
+labex:project/ $ cp t7/a.txt t7/b.txt
+labex:project/ $ echo other > t7/c.txt
+labex:project/ $ ./seven t7
+Вывод:
+
+764efa883dda1e11db47671c4a3bbd9e  t7/a.txt
+764efa883dda1e11db47671c4a3bbd9e  t7/b.txt
+Задача 8
+Написать программу, которая находит все файлы в данном каталоге с расширением, указанным в качестве аргумента и архивирует все эти файлы в архив tar. Код файла eight, созданного в консоли:
+
+#!/bin/bash
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <dir> <extension>" >&2
+    exit 1
+fi
+
+dir="$1"
+ext="$2"
+
+find "$dir" -maxdepth 1 -type f -name "*.$ext" -print0 | tar --null -T - -cf "archive_$ext.tar"
+Проверка кода:
+
+labex:project/ $ nano eight
+labex:project/ $ chmod +x eight
+labex:project/ $ shellcheck eight
+labex:project/ $ mkdir t8 && cd t8
+labex:t8/ $ touch a.txt b.txt c.log
+labex:t8/ $ cd ..
+labex:project/ $ ./eight t8 txt
+Вывод:
+
+t8/a.txt
+t8/b.txt
+Задача 9
+Написать программу, которая заменяет в файле последовательности из 4 пробелов на символ табуляции. Входной и выходной файлы задаются аргументами. Код файла nine, созданного в консоли:
+
+#!/bin/bash
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <input> <output>" >&2
+    exit 1
+fi
+
+sed 's/    /\t/g' "$1" > "$2"
+Проверка кода:
+
+labex:project/ $ nano nine
+labex:project/ $ chmod +x nine
+labex:project/ $ shellcheck nine
+labex:project/ $ printf 'a    b\n' > in.txt
+labex:project/ $ ./nine in.txt out.txt
+labex:project/ $ cat -A out.txt
+Вывод:
+
+a^Ib$
+Задача 10
+Написать программу, которая выводит названия всех пустых текстовых файлов в указанной директории. Директория передается в программу параметром. Код файла ten, созданного в консоли:
+
+#!/bin/bash
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <dir>" >&2
+    exit 1
+fi
+
+find "$1" -type f -name '*.txt' -empty
+Проверка кода:
+
+labex:project/ $ nano ten
+labex:project/ $ chmod +x ten
+labex:project/ $ shellcheck ten
+labex:project/ $ mkdir t10
+labex:project/ $ touch t10/empty.txt
+labex:project/ $ echo hi > t10/full.txt
+labex:project/ $ ./ten t10
+Вывод:
+
+t10/empty.txt
